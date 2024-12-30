@@ -9,23 +9,18 @@ class Playlist extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'description',
         'is_public',
     ];
 
-    /**
-     * Relationship: Playlist belongs to a User.
-     */
+    // A playlist belongs to one user
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Relationship: Playlist has many Songs.
-     */
+    // A playlist can have many songs
     public function songs()
     {
-        return $this->belongsToMany(Song::class)->withTimestamps();
+        return $this->belongsToMany(Song::class, 'playlist_song');
     }
 }

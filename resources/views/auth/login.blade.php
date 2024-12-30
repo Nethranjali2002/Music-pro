@@ -2,32 +2,16 @@
 
 @section('content')
 <h2>Login</h2>
-
-<form action="{{ route('login.post') }}" method="POST">
+<form method="POST" action="{{ route('login') }}">
     @csrf
-
-    <div>
-        <label>Email:</label>
-        <input type="email" name="email" value="{{ old('email') }}" required>
-        @error('email')
-        <div class="error">{{ $message }}</div>
-        @enderror
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" required autofocus>
     </div>
-
-    <div>
-        <label>Password:</label>
-        <input type="password" name="password" required>
-        @error('password')
-        <div class="error">{{ $message }}</div>
-        @enderror
+    <div class="mb-3">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" required>
     </div>
-
-    <div>
-        <label>
-            <input type="checkbox" name="remember"> Remember Me
-        </label>
-    </div>
-
-    <button type="submit">Login</button>
+    <button type="submit" class="btn btn-primary">Login</button>
 </form>
 @endsection

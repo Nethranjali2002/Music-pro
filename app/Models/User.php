@@ -12,20 +12,17 @@ class User extends Authenticatable
 
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array
+     * These fields can be bulk-filled using create() or update().
      */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role', // Added role
+        'role',  // 'admin' or 'user'
     ];
 
     /**
      * The attributes that should be hidden for arrays.
-     *
-     * @var array
      */
     protected $hidden = [
         'password',
@@ -33,7 +30,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Relationship: User has many Playlists.
+     * Relationship: A user can have many playlists.
      */
     public function playlists()
     {
@@ -41,7 +38,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is admin.
+     * Check if the user has the 'admin' role.
      */
     public function isAdmin()
     {

@@ -1,24 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Public Playlists</h2>
+<h1>All Playlists</h1>
+@auth
+<p><a class="btn btn-success" href="{{ route('playlists.create') }}">Create New Playlist</a></p>
+@endauth
 
-@if($playlists->isEmpty())
-<p>No public playlists available.</p>
-@else
-<div class="row">
+<ul>
     @foreach($playlists as $playlist)
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5 class="card-title">{{ $playlist->name }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">By: {{ $playlist->user->name }}</h6>
-                <p class="card-text">{{ Str::limit($playlist->description, 100) }}</p>
-                <a href="{{ route('playlists.show', $playlist) }}" class="card-link">View Playlist</a>
-            </div>
-        </div>
-    </div>
+    <li>
+        <a href="{{ route('playlists.show', $playlist->id) }}">
+            {{ $playlist->name }}
+            @if(!$playlist->is_public)
+            (Private)
+            @endif
+        </a>
+    </li>
     @endforeach
-</div>
-@endif
+</ul>
 @endsection

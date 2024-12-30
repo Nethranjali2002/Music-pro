@@ -10,13 +10,13 @@ class CreatePlaylistsTable extends Migration
     {
         Schema::create('playlists', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // Owner
+            $table->unsignedBigInteger('user_id'); // the playlist owner
             $table->string('name');
-            $table->text('description')->nullable();
+            // public (true) or private (false)
             $table->boolean('is_public')->default(true);
             $table->timestamps();
 
-            // Foreign key
+            // Foreign key to users table
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

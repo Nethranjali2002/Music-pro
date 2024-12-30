@@ -1,43 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>Add New Song</h2>
-
+<h1>Create a New Song</h1>
 <form action="{{ route('songs.store') }}" method="POST">
     @csrf
-
-    <div>
-        <label>Title:</label>
-        <input type="text" name="title" value="{{ old('title') }}" required>
-        @error('title')
-        <div class="error">{{ $message }}</div>
-        @enderror
+    <div class="mb-3">
+        <label for="title" class="form-label">Song Title</label>
+        <input type="text" class="form-control" name="title" id="title" required>
     </div>
 
-    <div>
-        <label>Artist:</label>
-        <input type="text" name="artist" value="{{ old('artist') }}" required>
-        @error('artist')
-        <div class="error">{{ $message }}</div>
-        @enderror
+    <div class="mb-3">
+        <label for="artist" class="form-label">Artist</label>
+        <input type="text" class="form-control" name="artist" id="artist" required>
     </div>
 
-    <div>
-        <label>Album:</label>
-        <input type="text" name="album" value="{{ old('album') }}">
-        @error('album')
-        <div class="error">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div>
-        <label>Year:</label>
-        <input type="number" name="year" value="{{ old('year') }}" min="1900" max="{{ date('Y') + 1 }}">
-        @error('year')
-        <div class="error">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <button type="submit">Add Song</button>
+    <button type="submit" class="btn btn-primary">Create Song</button>
 </form>
 @endsection

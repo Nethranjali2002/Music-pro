@@ -2,44 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Song;
+use Illuminate\Http\Request;
 
 class SongController extends Controller
 {
-    /**
-     * Display a listing of the songs.
-     */
+    // Show list of songs
     public function index()
     {
         $songs = Song::all();
         return view('songs.index', compact('songs'));
     }
 
-    /**
-     * Show the form for creating a new song.
-     */
+    // Show create form (ADMIN ONLY)
     public function create()
     {
         return view('songs.create');
     }
 
-    /**
-     * Store a newly created song in storage.
-     */
+    // Store new song
     public function store(Request $request)
     {
-        // Validate input
         $request->validate([
-            'title' => 'required|string|max:255',
-            'artist' => 'required|string|max:255',
-            'album' => 'nullable|string|max:255',
-            'year' => 'nullable|integer|min:1900|max:'.(date('Y') + 1),
+            'title' => 'required',
+            'artist' => 'required',
         ]);
 
-        // Create song
-        Song::create($request->all());
+        Song::create([
+            'title' => $request->title,
+            'artist' => $request->artist,
+        ]);
 
-        return redirect()->route('songs.index')->with('success', 'Song added successfully!');
+        return redirect()->route('songs.index')->with('success', 'Song created successfully!');
     }
 }

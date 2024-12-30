@@ -1,77 +1,45 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>{{ $playlist->name }}</h2>
-<p><strong>Created By:</strong> {{ $playlist->user->name }}</p>
-<p><strong>Description:</strong> {{ $playlist->description ?? 'No description provided.' }}</p>
-<p><strong>Visibility:</strong> {{ $playlist->is_public ? 'Public' : 'Private' }}</p>
+<h1>{{ $playlist->name }}</h1>
+<p>Owner: {{ $playlist->user->name }}</p>
+<p>Status: {{ $playlist->is_public ? 'Public' : 'Private' }}</p>
 
-@auth
-@if(Auth::id() === $playlist->user_id)
-<a href="{{ route('playlists.edit', $playlist) }}" class="btn btn-secondary">Edit Playlist</a>
-
-<form action="{{ route('playlists.destroy', $playlist) }}" method="POST" class="d-inline"
-    onsubmit="return confirm('Are you sure you want to delete this playlist?');">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger">Delete Playlist</button>
-</form>
-@endif
-@endauth
+@if(Auth::check() && Auth::id() === $playlist->user_id)
+<a class="btn btn-warning" href="{{ route('playlists.edit', $playlist->id) }}">Edit Playlist</a>
 
 <hr>
+<h3>Add Song</h3>
+<form action="{{ route('playlists.addSong', $playlist->id) }}" method="POST">
+    @csrf
+    <div class="mb-3">
+        <label for="song_id" class="form-label">Select Song</label>
+        <select class="form-control" name="song_id" id="song_id">
+            @foreach(\App\Models\Song::all() as $song)
+            <option value="{{ $song->id }}">{{ $song->title }} - {{ $song->artist }}</option>
+            @endforeach
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Add Song</button>
+</form>
+@endif
 
-<h3>Songs in this Playlist</h3>
-
-@if($playlist->songs->isEmpty())
-<p>No songs in this playlist.</p>
-@else
-<ul class="list-group">
-    @foreach($playlist->songs as $song)
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <div>
-            <strong>{{ $song->title }}</strong> by {{ $song->artist }}
-            @if($song->album)
-            <em>({{ $song->album }})</em>
-            @endif
-            @if($song->year)
-            <em>{{ $song->year }}</em>
-            @endif
-        </div>
-        @auth
-        @if(Auth::id() === $playlist->user_id)
-        <form action="{{ route('playlists.removeSong', [$playlist, $song]) }}" method="POST"
-            onsubmit="return confirm('Are you sure you want to remove this song from the playlist?');">
+<hr>
+<h3>Songs in this playlist</h3>
+<ul>
+    @foreach($songs as $song)
+    <li>
+        {{ $song->title }} - {{ $song->artist }}
+        @if(Auth::check() && Auth::id() === $playlist->user_id)
+        <!-- Remove button -->
+        <form action="{{ route('playlists.removeSong', [$playlist->id, $song->id]) }}" method="POST"
+            style="display:inline;">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-sm btn-danger">Remove</button>
         </form>
         @endif
-        @endauth
     </li>
     @endforeach
 </ul>
-@endif
-
-@auth
-@if(Auth::id() === $playlist->user_id)
-<hr>
-<h4>Add a Song to this Playlist</h4>
-<form action="{{ route('playlists.addSong', $playlist) }}" method="POST">
-    @csrf
-    <div class="input-group mb-3">
-        <select class="form-select @error('song_id') is-invalid @enderror" name="song_id" required>
-            <option selected disabled value="">Choose a song...</option>
-            @foreach(App\Models\Song::all() as $song)
-            <option value="{{ $song->id }}">{{ $song->title }} by {{ $song->artist }}</option>
-            @endforeach
-        </select>
-        <button class="btn btn-primary" type="submit">Add Song</button>
-    </div>
-    @error('song_id')
-    <div class="invalid-feedback d-block">{{ $message }}</div>
-    @enderror
-</form>
-@endif
-@endauth
 @endsection

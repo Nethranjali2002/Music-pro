@@ -12,8 +12,7 @@ class CreateSongsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('artist');
-            $table->string('album')->nullable();
-            $table->integer('year')->nullable();
+            // Add any other columns (genre, album, etc.) as needed
             $table->timestamps();
         });
     }

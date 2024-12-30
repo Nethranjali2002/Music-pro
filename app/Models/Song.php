@@ -6,18 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Song extends Model
 {
+    /**
+     * The attributes that can be mass assigned.
+     */
     protected $fillable = [
         'title',
         'artist',
-        'album',
-        'year',
+        // Add more if needed (album, genre, etc.)
     ];
 
     /**
-     * Relationship: Song belongs to many Playlists.
+     * Many-to-many relationship with Playlist.
      */
     public function playlists()
     {
-        return $this->belongsToMany(Playlist::class)->withTimestamps();
+        // playlist_song is the pivot table
+        return $this->belongsToMany(Playlist::class, 'playlist_song');
     }
 }
